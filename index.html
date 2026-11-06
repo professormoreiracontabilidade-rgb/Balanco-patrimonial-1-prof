@@ -34,6 +34,7 @@ main{padding:clamp(18px,3vw,38px);max-width:1100px;width:100%;margin:0 auto;flex
 .btn.secondary{background:#63738c;box-shadow:0 5px 0 #39475e}.actions{grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
 #inkCanvas{position:fixed;inset:0;width:100vw;height:100dvh;z-index:30;touch-action:none;pointer-events:auto;cursor:crosshair}
 #inkCanvas.off{pointer-events:none}
+#inkCanvas:not(.off){cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M5 27L10 17 23 4 28 9 15 22Z' fill='%23f5c542' stroke='%2314213d' stroke-width='2'/%3E%3Cpath d='M5 27L10 17 15 22Z' fill='%2314213d'/%3E%3C/svg%3E") 5 27,crosshair}
 header,.teacher-tools,button,input{position:relative}header{z-index:1}.teacher-tools{z-index:40}
 @media(max-width:600px){.tool-title{width:100%;text-align:center}.teacher-tools{gap:6px}.tool{padding:7px;font-size:12px}.question{font-size:20px}.option{font-size:19px}}
 
@@ -51,12 +52,12 @@ header,.teacher-tools,button,input{position:relative}header{z-index:1}.teacher-t
     <span class="colors" id="colors"><button class="color active" data-color="#17213b" style="--c:#17213b" title="Preto"></button><button class="color" data-color="#c73535" style="--c:#c73535" title="Vermelho"></button><button class="color" data-color="#165fc7" style="--c:#165fc7" title="Azul"></button><button class="color" data-color="#16834c" style="--c:#16834c" title="Verde"></button><button class="color" data-color="#f5d423" style="--c:#f5d423" title="Amarelo"></button></span>
     <label class="thickness">Espessura <input id="thickness" type="range" min="2" max="26" value="4"></label>
     <button class="tool" id="clearInk">Limpar tinta</button>
-    <button class="tool" id="toggleInk">Desativar escrita</button>
+    <button class="tool" id="toggleInk">Ativar caneta</button><span style="font-size:13px;font-weight:bold;color:#123d7a">Use Navegar / clicar para selecionar respostas e avançar.</span>
   </div>
   <main>
     <section id="login" class="screen active">
       <span class="badge">MODO PROFESSOR — ACESSO LIVRE</span><h1>Quiz Balanço Patrimonial</h1>
-      <p class="intro">10 questões recentes da FGV. Cada questão vale <b>10 pontos</b>. Use a caneta para escrever sobre a questão ou nas laterais. A entrada está liberada, sem cadastro.</p>
+      <p class="intro">10 questões recentes da FGV. Cada questão vale <b>10 pontos</b>. Acesso livre, sem cadastro. Clique em COMEÇAR AGORA. Para escrever, pressione ATIVAR CANETA; para responder ou avançar, pressione NAVEGAR / CLICAR.</p>
       <div class="actions"><button id="start" class="btn gold">COMEÇAR AGORA</button></div>
       <div class="mini">WhatsApp: 61 98532-3574</div>
     </section>
@@ -75,7 +76,7 @@ header,.teacher-tools,button,input{position:relative}header{z-index:1}.teacher-t
       <div class="actions"><button id="restart" class="btn gold">REFAZER O QUIZ</button></div><div class="mini">Curso de Contabilidade Professor Moreira • WhatsApp: 61 98532-3574</div>
     </section>
   </main>
-  <canvas id="inkCanvas" aria-label="Área de escrita do professor"></canvas>
+  <canvas id="inkCanvas" class="off" aria-label="Área de escrita do professor"></canvas>
 </div>
 <script>
 const questions=[
@@ -102,7 +103,7 @@ $('feedbackBack').onclick=()=>{renderQuestion();show('quiz')};$('next').onclick=
 function finish(){score=answers.filter((a,i)=>a===questions[i].a).length;const points=score*10,pct=score/questions.length*100;$('progress').style.width='100%';$('scoreRing').style.setProperty('--score',`${pct}%`);$('scoreText').textContent=`${points}/100`;$('studentResult').textContent=`${score} acertos em ${questions.length} questões.`;$('finalMessage').textContent=score===10?'Excelente! Gabaritou o treinamento.':score>=8?'Muito bom! Seu desempenho foi de aprovação.':score>=6?'Bom avanço! Revise os erros e tente novamente.':'Continue treinando: revise cada resposta e refaça o quiz.';show('final')}
 $('restart').onclick=()=>{current=0;score=0;selected=null;answers.fill(null);renderQuestion();show('quiz')};
 // Anotações independentes por questão, preservadas durante a navegação e no navegador.
-const canvas=$('inkCanvas'),ctx=canvas.getContext('2d');let strokes=[],drawing=null,tool='pen',color='#17213b',thickness=4,inkEnabled=true,inkKey='';
+const canvas=$('inkCanvas'),ctx=canvas.getContext('2d');let strokes=[],drawing=null,tool='pen',color='#17213b',thickness=4,inkEnabled=false,inkKey='';
 const storePrefix='moreira-bp-prof-v1-';
 function key(){return storePrefix+document.querySelector('.screen.active')?.id+'-'+current}
 function saveInk(){if(inkKey){try{localStorage.setItem(inkKey,JSON.stringify(strokes))}catch(e){}}}
@@ -115,11 +116,11 @@ canvas.addEventListener('pointerdown',e=>{if(!inkEnabled)return;drawing={tool,co
 canvas.addEventListener('pointermove',e=>{if(!drawing)return;drawing.points.push(point(e));redraw();paint(drawing);e.preventDefault()});
 function endStroke(){if(!drawing)return;strokes.push(drawing);drawing=null;saveInk();redraw()}
 canvas.addEventListener('pointerup',endStroke);canvas.addEventListener('pointercancel',endStroke);
-document.querySelectorAll('[data-tool]').forEach(b=>b.onclick=()=>{tool=b.dataset.tool;document.querySelectorAll('[data-tool]').forEach(x=>x.classList.toggle('active',x===b));canvas.style.cursor=tool==='eraser'?'cell':'crosshair'});
+document.querySelectorAll('[data-tool]').forEach(b=>b.onclick=()=>{tool=b.dataset.tool;document.querySelectorAll('[data-tool]').forEach(x=>x.classList.toggle('active',x===b));canvas.style.cursor=tool==='eraser'?'cell':'url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M5 27L10 17 23 4 28 9 15 22Z' fill='%23f5c542' stroke='%2314213d' stroke-width='2'/%3E%3Cpath d='M5 27L10 17 15 22Z' fill='%2314213d'/%3E%3C/svg%3E") 5 27, crosshair'});
 document.querySelectorAll('[data-color]').forEach(b=>b.onclick=()=>{color=b.dataset.color;document.querySelectorAll('[data-color]').forEach(x=>x.classList.toggle('active',x===b));if(tool==='eraser'){tool='pen';document.querySelectorAll('[data-tool]').forEach(x=>x.classList.toggle('active',x.dataset.tool==='pen'))}});
 $('thickness').oninput=e=>thickness=Number(e.target.value);
 $('clearInk').onclick=()=>{if(confirm('Apagar as anotações desta tela?')){strokes=[];saveInk();redraw()}};
-$('toggleInk').onclick=()=>{inkEnabled=!inkEnabled;canvas.classList.toggle('off',!inkEnabled);$('toggleInk').textContent=inkEnabled?'Desativar escrita':'Ativar escrita'};
+$('toggleInk').onclick=()=>{inkEnabled=!inkEnabled;canvas.classList.toggle('off',!inkEnabled);$('toggleInk').textContent=inkEnabled?'Navegar / clicar':'Ativar caneta'};
 window.addEventListener('resize',resizeInk);window.addEventListener('beforeunload',saveInk);loadInk();
 </script>
 </body>
