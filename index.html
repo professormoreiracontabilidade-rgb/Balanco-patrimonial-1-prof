@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#071c3f">
+  <title>Quiz FGV — Balanço Patrimonial | Professor Moreira</title>
+  <style>
+    :root{--navy:#071c3f;--blue:#123d7a;--gold:#ffc928;--paper:#fff;--ink:#14213d;--muted:#60708d;--green:#16834c;--red:#c73535;--line:#dbe4f1}
+    *{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(145deg,#06152f,#123d7a);color:var(--ink)}
+    body{min-height:100dvh;padding:max(12px,env(safe-area-inset-top)) 12px max(12px,env(safe-area-inset-bottom));display:grid;place-items:center}
+    button,input{font:inherit}.app{width:min(760px,100%);min-height:calc(100dvh - 24px);background:#f5f8fc;border-radius:24px;overflow:hidden;box-shadow:0 20px 60px #0007;display:flex;flex-direction:column}
+    header{background:var(--navy);color:#fff;padding:14px 18px;border-bottom:5px solid var(--gold)}
+    .brand{font-size:clamp(17px,4.4vw,24px);font-weight:900;text-align:center}.sub{margin-top:4px;color:#dbe9ff;text-align:center;font-size:14px;font-weight:700}
+    .bar{height:8px;background:#cbd6e5}.bar>span{display:block;width:0;height:100%;background:var(--gold);transition:.25s}
+    main{flex:1;display:flex;flex-direction:column;padding:clamp(16px,4vw,28px)}
+    .screen{display:none;flex:1;flex-direction:column}.screen.active{display:flex}.badge{align-self:flex-start;background:#e7eef8;color:var(--blue);border-radius:999px;padding:7px 12px;font-weight:900;font-size:14px}
+    h1{font-size:clamp(30px,8vw,48px);line-height:1.02;margin:20px 0 10px;color:var(--navy)}h2{font-size:clamp(24px,6vw,36px);line-height:1.12;margin:18px 0;color:var(--navy)}
+    .intro{font-size:clamp(18px,4.8vw,24px);line-height:1.35}.field{margin-top:16px}.field label{display:block;font-size:18px;font-weight:900;margin-bottom:7px}.field input{width:100%;padding:16px;border:2px solid #b8c7da;border-radius:14px;background:#fff;font-size:20px;outline:none}.field input:focus{border-color:var(--blue);box-shadow:0 0 0 4px #123d7a1c}
+    .error{min-height:24px;color:var(--red);font-weight:800;margin-top:10px}.btn{border:0;border-radius:14px;padding:16px 18px;background:var(--blue);color:#fff;font-weight:900;font-size:20px;cursor:pointer;box-shadow:0 5px 0 #071c3f}.btn:active{transform:translateY(3px);box-shadow:0 2px 0 #071c3f}.btn.gold{background:var(--gold);color:#17213b;box-shadow:0 5px 0 #b88d00}.actions{margin-top:auto;padding-top:18px;display:grid;gap:12px}
+    .source{font-size:14px;color:var(--muted);font-weight:800;margin:12px 0 8px}.question{font-size:16px;line-height:1.45;font-weight:400;white-space:pre-line}
+    .options{display:grid;gap:11px;margin-top:18px}.option{width:100%;text-align:left;border:2px solid #b9c8dc;border-radius:15px;padding:14px;background:#fff;color:var(--ink);font-size:clamp(18px,4.7vw,23px);line-height:1.28;font-weight:750;cursor:pointer}.option:hover,.option:focus{border-color:var(--blue);background:#edf4ff}.option.selected{border-color:var(--blue);background:#dbeaff;box-shadow:0 0 0 3px #123d7a25}.letter{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--navy);color:#fff;margin-right:8px;font-weight:900;text-transform:uppercase}
+    .answer-card{background:#fff;border:2px solid var(--line);border-radius:20px;padding:20px;margin-top:16px}.answer-card.correct{border-color:#55a87c}.answer-card.wrong{border-color:#dd7777}.status{font-size:clamp(27px,7vw,40px);font-weight:1000}.correct .status{color:var(--green)}.wrong .status{color:var(--red)}.answer-line{font-size:clamp(20px,5vw,27px);font-weight:900;margin:16px 0}.explanation{font-size:clamp(18px,4.5vw,22px);line-height:1.4}.result{text-align:center}.score-ring{width:190px;height:190px;margin:20px auto;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--gold) var(--score,0%),#dce4ef 0);position:relative}.score-ring:after{content:"";position:absolute;inset:15px;background:#fff;border-radius:50%}.score-text{position:relative;z-index:1;font-size:45px;font-weight:1000;color:var(--navy)}.result p{font-size:21px;line-height:1.35}.mini{font-size:14px;color:var(--muted);text-align:center;margin-top:16px}.hidden{display:none!important}
+    @media(max-width:420px){body{padding:0}.app{min-height:100dvh;border-radius:0}.option{font-size:18px;padding:12px}.letter{width:31px;height:31px}}
+
+/* Modo professor: conteúdo estável, escrita por cima do texto e laterais */
+body{display:block;padding:0;background:#e9edf6}
+.app{width:min(1500px,100%);min-height:100dvh;margin:auto;border-radius:0;box-shadow:none;overflow:visible;position:relative}
+main{padding:clamp(18px,3vw,38px);max-width:1100px;width:100%;margin:0 auto;flex:1}
+.question{font-size:clamp(21px,2vw,28px);line-height:1.48}
+.source{font-size:17px}.option{font-size:clamp(20px,2vw,26px)}
+.teacher-tools{position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:9px;padding:10px;background:#fff;border-bottom:2px solid #d5dce9}
+.tool-title{font-weight:900;color:#123d7a;margin-right:8px}.tool{border:1px solid #aab8cc;border-radius:9px;background:#eef2f8;padding:8px 11px;font-size:14px;font-weight:800;cursor:pointer;color:#14213d}.tool.active{background:#123d7a;color:white}.colors{display:flex;align-items:center;gap:6px}.color{width:25px;height:25px;border-radius:50%;border:2px solid #fff;background:var(--c);box-shadow:0 0 0 1px #77859a;cursor:pointer}.color.active{outline:3px solid #123d7a;outline-offset:2px}.thickness{display:flex;align-items:center;gap:5px;font-size:13px;font-weight:800}.thickness input{width:85px}
+.btn.secondary{background:#63738c;box-shadow:0 5px 0 #39475e}.actions{grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
+#inkCanvas{position:fixed;inset:0;width:100vw;height:100dvh;z-index:30;touch-action:none;pointer-events:auto;cursor:crosshair}
+#inkCanvas.off{pointer-events:none}
+header,.teacher-tools,button,input{position:relative}header{z-index:1}.teacher-tools{z-index:40}
+@media(max-width:600px){.tool-title{width:100%;text-align:center}.teacher-tools{gap:6px}.tool{padding:7px;font-size:12px}.question{font-size:20px}.option{font-size:19px}}
+
+  </style>
+</head>
+<body>
+<div class="app">
+  <header><div class="brand">CURSO DE CONTABILIDADE — PROFESSOR MOREIRA</div><div class="sub">Treinamento Pesado • Só questões da FGV</div></header>
+  <div class="bar"><span id="progress"></span></div>
+  <div class="teacher-tools" id="teacherTools" aria-label="Ferramentas de escrita">
+    <span class="tool-title">✎ MODO PROFESSOR</span>
+    <button class="tool active" data-tool="pen" title="Caneta">✎ Caneta</button>
+    <button class="tool" data-tool="highlight" title="Marca-texto">▰ Marca-texto</button>
+    <button class="tool" data-tool="eraser" title="Borracha">⌫ Borracha</button>
+    <span class="colors" id="colors"><button class="color active" data-color="#17213b" style="--c:#17213b" title="Preto"></button><button class="color" data-color="#c73535" style="--c:#c73535" title="Vermelho"></button><button class="color" data-color="#165fc7" style="--c:#165fc7" title="Azul"></button><button class="color" data-color="#16834c" style="--c:#16834c" title="Verde"></button><button class="color" data-color="#f5d423" style="--c:#f5d423" title="Amarelo"></button></span>
+    <label class="thickness">Espessura <input id="thickness" type="range" min="2" max="26" value="4"></label>
+    <button class="tool" id="clearInk">Limpar tinta</button>
+    <button class="tool" id="toggleInk">Desativar escrita</button>
+  </div>
+  <main>
+    <section id="login" class="screen active">
+      <span class="badge">MODO PROFESSOR — ACESSO LIVRE</span><h1>Quiz Balanço Patrimonial</h1>
+      <p class="intro">10 questões recentes da FGV. Cada questão vale <b>10 pontos</b>. Use a caneta para escrever sobre a questão ou nas laterais. A entrada está liberada, sem cadastro.</p>
+      <div class="actions"><button id="start" class="btn gold">COMEÇAR AGORA</button></div>
+      <div class="mini">WhatsApp: 61 98532-3574</div>
+    </section>
+    <section id="quiz" class="screen">
+      <span id="counter" class="badge"></span><div id="source" class="source"></div><div id="question" class="question"></div>
+      <div id="options" class="options"></div><div id="chooseError" class="error"></div>
+      <div class="actions"><button id="previous" class="btn secondary">← VOLTAR</button><button id="confirm" class="btn">CONFIRMAR RESPOSTA</button><button id="skip" class="btn secondary">PRÓXIMA →</button></div>
+    </section>
+    <section id="feedback" class="screen">
+      <span id="feedbackBadge" class="badge"></span><h2>Resposta</h2><div id="answerCard" class="answer-card"><div id="status" class="status"></div><div id="answerLine" class="answer-line"></div><div id="explanation" class="explanation"></div></div>
+      <div class="actions"><button id="feedbackBack" class="btn secondary">← VOLTAR À QUESTÃO</button><button id="next" class="btn gold">PRÓXIMA QUESTÃO</button></div>
+    </section>
+    <section id="final" class="screen result">
+      <span class="badge" style="align-self:center">RESULTADO FINAL</span><h1>Treinamento concluído!</h1><div id="scoreRing" class="score-ring"><div id="scoreText" class="score-text"></div></div>
+      <p id="finalMessage"></p><p id="studentResult"></p>
+      <div class="actions"><button id="restart" class="btn gold">REFAZER O QUIZ</button></div><div class="mini">Curso de Contabilidade Professor Moreira • WhatsApp: 61 98532-3574</div>
+    </section>
+  </main>
+  <canvas id="inkCanvas" aria-label="Área de escrita do professor"></canvas>
+</div>
+<script>
+const questions=[
+ {src:'FGV — ADTND (AMAZUL) / Auditor / 2026',q:'No âmbito da Contabilidade, as contas a receber representam direitos que a entidade possui em relação a terceiros, decorrentes de transações cujo recebimento ocorrerá futuramente. Esses direitos podem surgir, por exemplo, de vendas a prazo, de valores depositados em instituições financeiras ou de outros contratos que asseguram o recebimento de recursos.\n\nConsiderando o conceito de contas a receber, assinale a opção que apresenta corretamente um exemplo dessa categoria contábil.',o:['Equipamentos adquiridos para uso operacional da empresa.','Duplicatas emitidas em razão de vendas a prazo realizadas pela entidade.','Obrigações assumidas pela empresa com fornecedores de mercadorias.','Gastos antecipados relacionados a seguros contratados para exercícios futuros.','Investimentos mantidos para obtenção de controle societário em outras empresas.'],a:1,e:'As duplicatas decorrentes de vendas a prazo representam direitos da entidade contra seus clientes e, por isso, são contas a receber.'},
+ {src:'FGV — ADTND (AMAZUL) / Contador / 2026',q:'Assinale a opção que indica uma conta de natureza credora, que é incluída no ativo, no Balanço Patrimonial de uma entidade.',o:['Ações em tesouraria.','Despesa de depreciação.','Reserva para contingências.','Provisão para contingências.','Ajuste a valor presente de um recebível.'],a:4,e:'O ajuste a valor presente de um recebível é conta retificadora do ativo. Por reduzir o recebível, apresenta natureza credora.'},
+ {src:'FGV — Of Inv Pol (PC PI) / 2026',q:'Na elaboração de um laudo relacionado à situação financeira de uma entidade em 31/12/2024, foi constatado que as suas obrigações com terceiros eram de R$ 30.000 e que estas deveriam ser pagas em até 9 meses.\n\nEm relação ao Balanço Patrimonial da entidade, tinha saldo de R$ 30.000 o grupo denominado:',o:['Ativo circulante.','Passivo circulante.','Patrimônio líquido.','Ativo não circulante.','Passivo não circulante.'],a:1,e:'Obrigações com terceiros exigíveis em até 9 meses são classificadas no passivo circulante.'},
+ {src:'FGV — TDTND (AMAZUL) / Técnico em Contabilidade / 2026',q:'Em 31/12/2025, uma sociedade empresária apresentou, em seu Balanço Patrimonial, passivo não circulante de R$ 45.000.\n\nIsso significa que a sociedade empresária deverá liquidar esse passivo:',o:['No ano de 2026.','No ano de 2027.','Em qualquer data após 31/12/2026.','Em qualquer data após 31/12/2027.','Não é possível determinar a data de liquidação através da classificação contábil.'],a:2,e:'Na data-base de 31/12/2025, as obrigações exigíveis após o término do exercício seguinte, isto é, após 31/12/2026, integram o passivo não circulante.'},
+ {src:'FGV — TDTND (AMAZUL) / Técnico em Contabilidade / 2026',q:'Assinale a opção que indica duas contas do ativo que podem ser classificadas como circulante ou realizável a longo prazo, de acordo com a expectativa do prazo de realização.',o:['Clientes e estoques.','Clientes e fornecedores.','Fornecedores e impostos a pagar.','Estoques e depreciação acumulada.','Computadores e depreciação acumulada.'],a:0,e:'Clientes e estoques são ativos. Conforme o prazo esperado de realização, podem integrar o ativo circulante ou o realizável a longo prazo.'},
+ {src:'FGV — TDTND (AMAZUL) / Técnico em Contabilidade / 2026',q:'Em 01/10/2025, uma sociedade empresária aplicou R$ 40.000 em um fundo de investimento, cujo prazo de resgate é de 5 anos.\n\nNo Balanço Patrimonial, a contrapartida da diminuição no caixa deve ser reconhecida no seguinte grupo:',o:['Investimentos.','Ativo circulante.','Passivo circulante.','Passivo não circulante.','Ativo realizável a longo prazo.'],a:4,e:'Como o resgate ocorrerá em 5 anos, o direito financeiro será realizado no longo prazo e deve ser classificado no ativo realizável a longo prazo.'},
+ {src:'FGV — Aud SC (TCE RR) / 2025',q:'Assinale a opção que indica um investimento e uma despesa cujo reconhecimento é diretamente relacionado a ele.',o:['Compra de veículo e depreciação.','Arrendamento de edificação e exaustão.','Pesquisa de ativo intangível e amortização.','Contratação de empregado e salário mensal.','Venda de participação acionária e distribuição de dividendos.'],a:0,e:'A compra do veículo reconhece um ativo imobilizado. A depreciação apropria como despesa a perda de valor desse ativo ao longo de sua vida útil.'},
+ {src:'FGV — ACE (TCE RR) / Ciências Contábeis / 2025',q:'Das contas a seguir, a que pode ser classificada como ativo circulante ou realizável a longo prazo, dependendo do prazo de realização é:',o:['Disponibilidades.','Ativo contingente.','Estoques.','Receita antecipada.','Adiantamento a diretores.'],a:2,e:'Os estoques podem ser classificados no circulante ou no realizável a longo prazo conforme o ciclo operacional e o prazo esperado de realização.'},
+ {src:'FGV — Bacharel (CFC) / 1º Exame de Suficiência / 2025',q:'Assinale a opção que contempla apenas componentes do Patrimônio Líquido, descritos na Lei nº 6.404/76 e alterações posteriores.',o:['Capital Social – Investimentos – Ações em Tesouraria.','Capital Social – Dividendos Obrigatórios a Pagar – Ajustes de Avaliação Patrimonial.','Reservas de Capital – Reservas de Lucros – Ações em Tesouraria.','Ajustes de Avaliação Patrimonial – Capital Social – Debêntures.'],a:2,e:'Reservas de capital, reservas de lucros e ações em tesouraria são componentes do patrimônio líquido. As ações em tesouraria aparecem como conta redutora.'},
+ {src:'FGV — AJ TRT24 / Administrativa / Contabilidade / 2025',q:'Assinale a opção que indica uma conta de natureza devedora.',o:['Depreciação acumulada.','Provisão para contingências.','Receita recebida antecipadamente.','Gastos na emissão de valores patrimoniais.','Perdas estimadas com crédito de liquidação duvidosa.'],a:3,e:'Os gastos na emissão de valores patrimoniais são registrados como conta redutora do patrimônio líquido e possuem natureza devedora.'}
+];
+const $=id=>document.getElementById(id);
+let current=0,score=0,selected=null,student='Professor Moreira',answers=Array(questions.length).fill(null);
+function show(id){saveInk();document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));$(id).classList.add('active');window.scrollTo(0,0);requestAnimationFrame(loadInk)}
+$('start').onclick=()=>{current=0;renderQuestion();show('quiz')};
+function renderQuestion(){selected=answers[current];$('chooseError').textContent='';const x=questions[current];$('progress').style.width=`${current/questions.length*100}%`;$('counter').textContent=`QUESTÃO ${current+1} DE ${questions.length}`;$('source').textContent=x.src;$('question').textContent=x.q;$('options').replaceChildren();x.o.forEach((t,i)=>{const b=document.createElement('button');b.className='option'+(selected===i?' selected':'');b.dataset.i=i;const letter=document.createElement('span');letter.className='letter';letter.textContent=String.fromCharCode(65+i);b.append(letter,document.createTextNode(t));b.onclick=()=>{document.querySelectorAll('.option').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');selected=i;answers[current]=i;$('chooseError').textContent=''};$('options').append(b)});$('previous').disabled=current===0}
+function goto(n){if(n<0)return;if(n>=questions.length){finish();return}current=n;renderQuestion();show('quiz')}
+$('previous').onclick=()=>goto(current-1);$('skip').onclick=()=>goto(current+1);
+$('confirm').onclick=()=>{if(selected===null){$('chooseError').textContent='Marque uma alternativa antes de confirmar.';return}const x=questions[current],ok=selected===x.a;$('feedbackBadge').textContent=`QUESTÃO ${current+1} DE ${questions.length}`;$('answerCard').className=`answer-card ${ok?'correct':'wrong'}`;$('status').textContent=ok?'✓ VOCÊ ACERTOU!':'✕ VOCÊ ERROU';$('answerLine').textContent=`Gabarito: ${String.fromCharCode(65+x.a)} — ${x.o[x.a]}`;$('explanation').textContent=x.e;$('next').textContent=current===questions.length-1?'VER RESULTADO FINAL':'PRÓXIMA QUESTÃO';show('feedback')};
+$('feedbackBack').onclick=()=>{renderQuestion();show('quiz')};$('next').onclick=()=>goto(current+1);
+function finish(){score=answers.filter((a,i)=>a===questions[i].a).length;const points=score*10,pct=score/questions.length*100;$('progress').style.width='100%';$('scoreRing').style.setProperty('--score',`${pct}%`);$('scoreText').textContent=`${points}/100`;$('studentResult').textContent=`${score} acertos em ${questions.length} questões.`;$('finalMessage').textContent=score===10?'Excelente! Gabaritou o treinamento.':score>=8?'Muito bom! Seu desempenho foi de aprovação.':score>=6?'Bom avanço! Revise os erros e tente novamente.':'Continue treinando: revise cada resposta e refaça o quiz.';show('final')}
+$('restart').onclick=()=>{current=0;score=0;selected=null;answers.fill(null);renderQuestion();show('quiz')};
+// Anotações independentes por questão, preservadas durante a navegação e no navegador.
+const canvas=$('inkCanvas'),ctx=canvas.getContext('2d');let strokes=[],drawing=null,tool='pen',color='#17213b',thickness=4,inkEnabled=true,inkKey='';
+const storePrefix='moreira-bp-prof-v1-';
+function key(){return storePrefix+document.querySelector('.screen.active')?.id+'-'+current}
+function saveInk(){if(inkKey){try{localStorage.setItem(inkKey,JSON.stringify(strokes))}catch(e){}}}
+function loadInk(){inkKey=key();try{strokes=JSON.parse(localStorage.getItem(inkKey)||'[]')}catch(e){strokes=[]}resizeInk()}
+function resizeInk(){const ratio=window.devicePixelRatio||1;const w=innerWidth,h=innerHeight;if(canvas.width!==Math.round(w*ratio)||canvas.height!==Math.round(h*ratio)){canvas.width=Math.round(w*ratio);canvas.height=Math.round(h*ratio);canvas.style.width=w+'px';canvas.style.height=h+'px'}ctx.setTransform(ratio,0,0,ratio,0,0);redraw()}
+function redraw(){ctx.clearRect(0,0,innerWidth,innerHeight);for(const s of strokes)paint(s)}
+function paint(s){if(!s.points?.length)return;ctx.save();ctx.lineCap='round';ctx.lineJoin='round';ctx.lineWidth=s.width;ctx.globalAlpha=s.tool==='highlight'?.35:1;ctx.globalCompositeOperation=s.tool==='eraser'?'destination-out':'source-over';ctx.strokeStyle=s.color;ctx.beginPath();ctx.moveTo(s.points[0][0]*innerWidth,s.points[0][1]*innerHeight);for(let i=1;i<s.points.length;i++)ctx.lineTo(s.points[i][0]*innerWidth,s.points[i][1]*innerHeight);if(s.points.length===1){ctx.lineTo(s.points[0][0]*innerWidth+.1,s.points[0][1]*innerHeight+.1)}ctx.stroke();ctx.restore()}
+function point(e){return [e.clientX/innerWidth,e.clientY/innerHeight]}
+canvas.addEventListener('pointerdown',e=>{if(!inkEnabled)return;drawing={tool,color,width:tool==='highlight'?Math.max(15,thickness*2):tool==='eraser'?Math.max(18,thickness*3):thickness,points:[point(e)]};canvas.setPointerCapture(e.pointerId);e.preventDefault()});
+canvas.addEventListener('pointermove',e=>{if(!drawing)return;drawing.points.push(point(e));redraw();paint(drawing);e.preventDefault()});
+function endStroke(){if(!drawing)return;strokes.push(drawing);drawing=null;saveInk();redraw()}
+canvas.addEventListener('pointerup',endStroke);canvas.addEventListener('pointercancel',endStroke);
+document.querySelectorAll('[data-tool]').forEach(b=>b.onclick=()=>{tool=b.dataset.tool;document.querySelectorAll('[data-tool]').forEach(x=>x.classList.toggle('active',x===b));canvas.style.cursor=tool==='eraser'?'cell':'crosshair'});
+document.querySelectorAll('[data-color]').forEach(b=>b.onclick=()=>{color=b.dataset.color;document.querySelectorAll('[data-color]').forEach(x=>x.classList.toggle('active',x===b));if(tool==='eraser'){tool='pen';document.querySelectorAll('[data-tool]').forEach(x=>x.classList.toggle('active',x.dataset.tool==='pen'))}});
+$('thickness').oninput=e=>thickness=Number(e.target.value);
+$('clearInk').onclick=()=>{if(confirm('Apagar as anotações desta tela?')){strokes=[];saveInk();redraw()}};
+$('toggleInk').onclick=()=>{inkEnabled=!inkEnabled;canvas.classList.toggle('off',!inkEnabled);$('toggleInk').textContent=inkEnabled?'Desativar escrita':'Ativar escrita'};
+window.addEventListener('resize',resizeInk);window.addEventListener('beforeunload',saveInk);loadInk();
+</script>
+</body>
+</html>
